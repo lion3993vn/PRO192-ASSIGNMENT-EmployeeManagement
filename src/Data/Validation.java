@@ -104,4 +104,22 @@ public class Validation {
         }while(true);
         return num;
     }
+    
+    public static boolean getGender(String input, String error){
+        Scanner sc = new Scanner(System.in);
+        String gender;
+        boolean check;
+        do{
+            System.out.print(input);
+            gender = sc.nextLine().toLowerCase();
+            if(gender.equals("true")){
+                check = true;
+                break;
+            }else if(gender.equals("false")){
+                check = false;
+                break;
+            } else System.err.println(error);
+        }while(true);
+        return check;
+    }
 }

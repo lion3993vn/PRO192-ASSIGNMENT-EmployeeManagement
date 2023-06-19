@@ -5,6 +5,8 @@
  */
 package Data;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -13,7 +15,7 @@ import java.util.Scanner;
  */
 public class HR {
     private static int cont = 0;
-    private static Employee ep[] = new Employee[100];
+    private static List<Employee> ep = new ArrayList();
 
     public HR() {
     }
@@ -37,10 +39,9 @@ public class HR {
                     }
                     break;
                 case 2:
-                    for (int i = 0; i < cont; i++) {
-                        ep[i].xuatThongTinNV();
+                    for (Employee x : ep) 
+                        x.xuatThongTinNV();
                     break;
-                    }
             }
         } while(true);
     }
@@ -73,13 +74,13 @@ public class HR {
         double basicSalary, seniority, sales;
         int check = 0;
         Scanner sc = new Scanner(System.in);
-        name = Validation.getNoneBlankString("Tên: ", "Lỗi tên cmm");
+        name = Validation.getNoneBlankString("Tên: ", "Lỗi tên");
         while(true){
             System.out.print("ID: ");
             ID = sc.nextLine();
             if (Validation.isID(ID)){
                 for (int i = 0; i < cont; i++) {
-                    if(ep[i].id.equals(ID)) {
+                    if(ep.get(i).id.equals(ID)) {
                         System.err.println("ID đã bị trùng");
                         check = i;
                         break;
@@ -87,31 +88,12 @@ public class HR {
                 } break;
             } else System.err.println("Không đúng định dạng ID (HRxxxxx)");
         }
-//        while(1 + 1 == 2){
-//            try{
-//                System.out.print("Giới tính (true: nam | false: nữ):");
-//                gender = sc.nextBoolean();
-//                break;
-//            }catch(Exception e){
-//                System.err.println("Vui lòng nhập true/false");
-//            }
-//        }
-        do{
-            System.out.print("Giới tính (true: nam | false: nữ):");
-            String genderCheck = sc.nextLine().toLowerCase();
-            if(genderCheck.equals("true")){
-                gender = true;
-                break;
-            }else if(genderCheck.equals("false")){
-                gender = false;
-                break;
-            } else System.err.println("Vui lòng nhập true/false");
-        }while(true);
+        gender = Validation.getGender("Giới tính (true: nam | false: nữ): ", "Vui lòng nhập true/false");
         birth = Validation.getBirthDate("Ngày sinh (dd/mm/yyyy): ", "Vui lòng nhập đúng định dạng");
         basicSalary = Validation.isNumber("Lương cơ bản: ", "Lương phải là số và lớn hơn 0");
         seniority = Validation.isNumber("Thâm niên: ", "Thâm niên phải là số và lớn hơn 0");
         sales = Validation.isNumber("Doanh số: ", "Doanh số phải là số và lớn hơn 0");
-        ep[cont++] = new Business(sales, name, ID, gender, birth, basicSalary, seniority);
+        ep.add(new Business(sales, name, ID, gender, birth, basicSalary, seniority));
     }
 
 }

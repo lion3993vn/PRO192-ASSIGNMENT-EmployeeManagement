@@ -14,7 +14,6 @@ import java.util.Scanner;
  * @author Pham Hieu
  */
 public class HR {
-    private static int cont = 0;
     private static List<Employee> ep = new ArrayList();
 
     public HR() {
@@ -36,11 +35,15 @@ public class HR {
                             inputBussiness();
                             break;
                         case 2:
+                            inputAdministrator();
+                            break;
                     }
                     break;
                 case 2:
-                    for (Employee x : ep) 
+                    for (Employee x : ep){
+                        System.out.println("========EMPLOYEE========");
                         x.xuatThongTinNV();
+                    }
                     break;
             }
         } while(true);
@@ -79,7 +82,7 @@ public class HR {
             System.out.print("ID: ");
             ID = sc.nextLine();
             if (Validation.isID(ID)){
-                for (int i = 0; i < cont; i++) {
+                for (int i = 0; i < ep.size(); i++) {
                     if(ep.get(i).id.equals(ID)) {
                         System.err.println("ID đã bị trùng");
                         check = i;
@@ -95,5 +98,50 @@ public class HR {
         sales = Validation.isNumber("Doanh số: ", "Doanh số phải là số và lớn hơn 0");
         ep.add(new Business(sales, name, ID, gender, birth, basicSalary, seniority));
     }
-
+    public static void inputAdministrator(){
+        String name, ID, birth;
+        boolean gender;
+        double basicSalary, seniority, allowance;
+        int check = 0;
+        Scanner sc = new Scanner(System.in);
+        name = Validation.getNoneBlankString("Tên: ", "Lỗi tên");
+        while(true){
+            System.out.print("ID: ");
+            ID = sc.nextLine().toUpperCase();
+            if (Validation.isID(ID)){
+                for (int i = 0; i < ep.size(); i++) {
+                    if(ep.get(i).id.equals(ID)) {
+                        System.err.println("ID đã bị trùng");
+                        check = i;
+                        break;
+                    } 
+                } break;
+            } else System.err.println("Không đúng định dạng ID (HRxxxxx)");
+        }
+        gender = Validation.getGender("Giới tính (true: nam | false: nữ): ", "Vui lòng nhập true/false");
+        birth = Validation.getBirthDate("Ngày sinh (dd/mm/yyyy): ", "Vui lòng nhập đúng định dạng");
+        basicSalary = Validation.isNumber("Lương cơ bản: ", "Lương phải là số và lớn hơn 0");
+        seniority = Validation.isNumber("Thâm niên: ", "Thâm niên phải là số và lớn hơn 0");
+        allowance = Validation.isNumber("Phụ cấp: ", "Phụ cấp phải là số và lớn hơn 0");
+        ep.add(new Administrator(allowance, name, ID, gender, birth, basicSalary, seniority));
+    }
+    public static void printEmployeeType(){
+        Scanner sc = new Scanner(System.in);
+        String type;
+        System.out.println("Loại nhân viên (kinh doanh / hành chính): ");
+        type = sc.nextLine().toLowerCase();
+        if(type.equals("kinh doanh")){
+            for (Employee x : ep) {
+                if(x instanceof Business){
+                    x.xuatThongTinNV();
+                }
+            }
+        } else if(type.equals("hành chính")){
+            for (Employee x : ep) {
+                if(x instanceof Administrator){
+                    x.xuatThongTinNV();
+                }
+            }
+        }
+    }
 }

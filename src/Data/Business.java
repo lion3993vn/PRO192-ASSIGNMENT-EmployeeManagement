@@ -5,6 +5,8 @@
  */
 package Data;
 
+import java.text.DecimalFormat;
+
 /**
  *
  * @author Pham Hieu
@@ -23,14 +25,16 @@ public class Business extends Employee{
     }
 
     public double getBonus() {
-        if(sales>= 5000000 && sales < 10000000){
-            bonus = 5/100;
-        } else if(sales>= 1000000 && sales < 20000000){
-            bonus = 10/100;
-        } else if(sales >= 20000000) bonus = 20/100;
+        if(sales >= 5000000 && sales < 10000000){
+            bonus = 0.05;
+        } else if(sales >= 10000000 && sales < 20000000){
+            bonus = 0.1;
+        } else if(sales >= 20000000 && sales < 30000000){
+            bonus = 0.2;
+        } else bonus = 0;
         return bonus;
     }
-
+    
     public double getSales(){
         return sales;
     }
@@ -46,14 +50,15 @@ public class Business extends Employee{
 
     @Override
     public void xuatThongTinNV() {
+        DecimalFormat decimalFormat = new DecimalFormat("#,##0");
         System.out.println("Tên: " + name);
-        System.out.println("Mã số:" + id);
+        System.out.println("Mã số: " + id);
         System.out.println("Giới tính: " + gender);
         System.out.println("Ngày sinh: " + birth);
         System.out.println("Chức vụ: Nhân viên kinh doanh");
-        System.out.println("Lương: "+ getSalary());
+        System.out.println("Lương: "+ decimalFormat.format(getSalary()));
         System.out.println("Thâm niên: " + seniority);
-        System.out.println("Doanh số: " + getSales());
-        System.out.println("Hoa hồng: " + getBonus());
+        System.out.println("Doanh số: " + decimalFormat.format(getSales()));
+        System.out.println("Hoa hồng: " + decimalFormat.format(getBonus()));
     }
 }

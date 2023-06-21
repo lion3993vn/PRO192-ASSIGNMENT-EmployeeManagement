@@ -12,14 +12,14 @@ package Data;
 public abstract class Employee {
     protected String name;
     protected String id;
-    protected boolean gender;
+    protected String gender;
     protected String birth;
     protected double basicSalary;
     protected double rateSalary = 1;
     protected double salary;
     protected double seniority;
 
-    public Employee(String name, String id, boolean gender, String birth, double basicSalary, double seniority) {
+    public Employee(String name, String id, String gender, String birth, double basicSalary, double seniority) {
         this.name = name;
         this.id = id;
         this.gender = gender;

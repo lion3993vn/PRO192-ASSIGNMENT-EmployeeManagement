@@ -5,6 +5,7 @@
  */
 package Data;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -14,23 +15,24 @@ import java.util.Scanner;
  * @author Pham Hieu
  */
 public class HR {
-    private static List<Employee> ep = new ArrayList();
 
+    private static List<Employee> ep = new ArrayList();
+    private static DecimalFormat decimalFormat = new DecimalFormat("#,##0");
     public HR() {
     }
-    
+
     public static void main(String[] args) {
         byte choose, choose2;
-        
+
         Scanner sc = new Scanner(System.in);
-        do{
+        do {
             menu();
             choose = sc.nextByte();
-            switch(choose){
+            switch (choose) {
                 case 1:
                     nhapDS();
                     choose2 = sc.nextByte();
-                    switch(choose2){
+                    switch (choose2) {
                         case 1:
                             inputBussiness();
                             break;
@@ -40,15 +42,22 @@ public class HR {
                     }
                     break;
                 case 2:
-                    for (Employee x : ep){
+                    for (Employee x : ep) {
                         System.out.println("========EMPLOYEE========");
                         x.xuatThongTinNV();
                     }
                     break;
+                case 3:
+                    printEmployeeType();
+                    break;
+                case 4:
+                    calAvgSalary();
+                    break;
             }
-        } while(true);
+        } while (true);
     }
-    public static void menu(){
+
+    public static void menu() {
         System.out.println("=============");
         System.out.println("1. Thêm nhân viên");
         System.out.println("2. Danh sách nhân viên");
@@ -64,33 +73,36 @@ public class HR {
         System.out.println("=============");
         System.out.print("Choose your option: ");
     }
-    public static void nhapDS(){
+
+    public static void nhapDS() {
         System.out.println("=====ADD=====");
         System.out.println("1. Nhân viên kinh doanh");
         System.out.println("2. Nhân viên hành chính");
         System.out.println("=============");
         System.out.print("Choose your option: ");
     }
-    public static void inputBussiness(){
-        String name, ID, birth;
-        boolean gender;
+
+    public static void inputBussiness() {
+        String name, ID, birth, gender;
         double basicSalary, seniority, sales;
-        int check = 0;
+        int i;
         Scanner sc = new Scanner(System.in);
         name = Validation.getNoneBlankString("Tên: ", "Lỗi tên");
-        while(true){
+        do {
             System.out.print("ID: ");
-            ID = sc.nextLine();
-            if (Validation.isID(ID)){
-                for (int i = 0; i < ep.size(); i++) {
-                    if(ep.get(i).id.equals(ID)) {
+            ID = sc.nextLine().toUpperCase();
+            if (Validation.isID(ID)) {
+                for (i = 0; i < ep.size(); i++) {
+                    if (ep.get(i).id.equals(ID)) {
                         System.err.println("ID đã bị trùng");
-                        check = i;
                         break;
-                    } 
-                } break;
-            } else System.err.println("Không đúng định dạng ID (HRxxxxx)");
-        }
+                    }
+                }
+                if(i == ep.size()) break;
+            } else {
+                System.err.println("ID không đúng định dạng");
+            }
+        } while (true);
         gender = Validation.getGender("Giới tính (true: nam | false: nữ): ", "Vui lòng nhập true/false");
         birth = Validation.getBirthDate("Ngày sinh (dd/mm/yyyy): ", "Vui lòng nhập đúng định dạng");
         basicSalary = Validation.isNumber("Lương cơ bản: ", "Lương phải là số và lớn hơn 0");
@@ -98,26 +110,28 @@ public class HR {
         sales = Validation.isNumber("Doanh số: ", "Doanh số phải là số và lớn hơn 0");
         ep.add(new Business(sales, name, ID, gender, birth, basicSalary, seniority));
     }
-    public static void inputAdministrator(){
-        String name, ID, birth;
-        boolean gender;
+
+    public static void inputAdministrator() {
+        String name, ID, birth, gender;
         double basicSalary, seniority, allowance;
-        int check = 0;
+        int i;
         Scanner sc = new Scanner(System.in);
         name = Validation.getNoneBlankString("Tên: ", "Lỗi tên");
-        while(true){
+        do {
             System.out.print("ID: ");
             ID = sc.nextLine().toUpperCase();
-            if (Validation.isID(ID)){
-                for (int i = 0; i < ep.size(); i++) {
-                    if(ep.get(i).id.equals(ID)) {
+            if (Validation.isID(ID)) {
+                for (i = 0; i < ep.size(); i++) {
+                    if (ep.get(i).id.equals(ID)) {
                         System.err.println("ID đã bị trùng");
-                        check = i;
                         break;
-                    } 
-                } break;
-            } else System.err.println("Không đúng định dạng ID (HRxxxxx)");
-        }
+                    }
+                }
+                if(i == ep.size()) break;
+            } else {
+                System.err.println("ID không đúng định dạng");
+            }
+        } while (true);
         gender = Validation.getGender("Giới tính (true: nam | false: nữ): ", "Vui lòng nhập true/false");
         birth = Validation.getBirthDate("Ngày sinh (dd/mm/yyyy): ", "Vui lòng nhập đúng định dạng");
         basicSalary = Validation.isNumber("Lương cơ bản: ", "Lương phải là số và lớn hơn 0");
@@ -125,23 +139,39 @@ public class HR {
         allowance = Validation.isNumber("Phụ cấp: ", "Phụ cấp phải là số và lớn hơn 0");
         ep.add(new Administrator(allowance, name, ID, gender, birth, basicSalary, seniority));
     }
-    public static void printEmployeeType(){
+
+    public static void printEmployeeType() {
         Scanner sc = new Scanner(System.in);
         String type;
-        System.out.println("Loại nhân viên (kinh doanh / hành chính): ");
+        do{
+        System.out.print("Chọn loại nhân viên (Business | Administrator): ");
         type = sc.nextLine().toLowerCase();
-        if(type.equals("kinh doanh")){
-            for (Employee x : ep) {
-                if(x instanceof Business){
-                    x.xuatThongTinNV();
-                }
-            }
-        } else if(type.equals("hành chính")){
-            for (Employee x : ep) {
-                if(x instanceof Administrator){
-                    x.xuatThongTinNV();
-                }
+        if(!type.equals("business") || !type.equals("administrator")) System.err.println("Vui lòng nhập Business hoặc Administrator");
+        } while(!type.equals("business") && !type.equals("administrator"));
+        for (Employee x : ep) {
+            if (type.equals("business") && (x instanceof Business)) {
+                System.out.println("======BUSINESS======");
+                x.xuatThongTinNV();
+            } else if (type.equals("administrator") && (x instanceof Administrator)) {
+                System.out.println("======ADMINISTRATOR======");
+                x.xuatThongTinNV();
             }
         }
+    }
+    public static void calAvgSalary(){
+        double sum = 0;
+        if(ep.size() == 0){
+            System.err.println("Không có nhân viên nào để tính lương");
+//        } else if(ep.size() == 1){
+//            System.out.println("Lương trung bình toàn công ty: " + (ep.get(0).salary));
+        } else {
+            for (Employee x : ep) {
+                sum += x.getSalary();
+            }
+            System.out.println("Lương trung bình toàn công ty: " + decimalFormat.format(sum / ep.size()));
+        }
+    }
+    public static void fiMostSalary(){
+        
     }
 }

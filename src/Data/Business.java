@@ -15,24 +15,23 @@ public class Business extends Employee{
     double sales;
     double bonus;
 
-    public Business(String name, String id, boolean gender, String birth, double basicSalary, double seniority) {
+    public Business(String name, String id, String gender, String birth, double basicSalary, double seniority) {
         super(name, id, gender, birth, basicSalary, seniority);
     }
 
-    public Business(double sales, String name, String id, boolean gender, String birth, double basicSalary, double seniority) {
+    public Business(double sales, String name, String id, String gender, String birth, double basicSalary, double seniority) {
         super(name, id, gender, birth, basicSalary, seniority);
         this.sales = sales;
     }
 
     public double getBonus() {
         if(sales >= 5000000 && sales < 10000000){
-            bonus = 0.05;
+            return 0.05;
         } else if(sales >= 10000000 && sales < 20000000){
-            bonus = 0.1;
+            return 0.1;
         } else if(sales >= 20000000 && sales < 30000000){
-            bonus = 0.2;
-        } else bonus = 0;
-        return bonus;
+            return 0.2;
+        } else return 0;
     }
     
     public double getSales(){
@@ -40,8 +39,11 @@ public class Business extends Employee{
     }
 
     public void setSales(double sales){
+        if(sales >= 0){
             this.sales = sales;
-        }
+            this.bonus = getBonus();
+        }   
+    }
     
     @Override
     public void tinhLuong() {
@@ -56,9 +58,10 @@ public class Business extends Employee{
         System.out.println("Giới tính: " + gender);
         System.out.println("Ngày sinh: " + birth);
         System.out.println("Chức vụ: Nhân viên kinh doanh");
+        System.out.println("Lương cơ bản: "+ decimalFormat.format(basicSalary));
         System.out.println("Lương: "+ decimalFormat.format(getSalary()));
         System.out.println("Thâm niên: " + seniority);
         System.out.println("Doanh số: " + decimalFormat.format(getSales()));
-        System.out.println("Hoa hồng: " + decimalFormat.format(getBonus()));
+        System.out.println("Hoa hồng: " + decimalFormat.format(getBonus()* getSales()));
     }
 }

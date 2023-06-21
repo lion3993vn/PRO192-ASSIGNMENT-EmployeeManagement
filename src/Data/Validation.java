@@ -5,7 +5,6 @@
  */
 package Data;
 
-import com.sun.xml.internal.ws.api.addressing.AddressingVersion;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
@@ -34,7 +33,7 @@ public class Validation {
                 }
                 cont = false;
             } catch (Exception e) {
-                System.out.println(errMsg);
+                System.err.println(errMsg);
             }
         } while (cont == true);
         return s;
@@ -53,27 +52,13 @@ public class Validation {
         return false;
     }
     
-    public static String getString(String input, String error) {
-        String type;
-        Scanner sc = new Scanner(System.in);
-        while (true) {
-            try {
-                System.out.print(input);
-                type = sc.nextLine().trim();
-                if (type.length() == 0 || type.isEmpty()) {
-                    throw new Exception();
-                }
-                return type;
-            } catch (Exception e) {
-                System.out.println(error);
-            }
-        }
-    }
     public static String getBirthDate(String input, String error) {
         boolean check = true;
         String date;
+        Scanner sc = new Scanner(System.in);
         do {
-            date = getString(input, error);
+            System.out.print(input);
+            date = sc.nextLine();
             check = checkDate(date);
             if (!check) {
                 System.err.println("Không đúng định dạng ngày dd/MM/yyyy");
@@ -105,21 +90,20 @@ public class Validation {
         return num;
     }
     
-    public static boolean getGender(String input, String error){
+    public static String getGender(String input, String error){
         Scanner sc = new Scanner(System.in);
         String gender;
-        boolean check;
         do{
             System.out.print(input);
             gender = sc.nextLine().toLowerCase();
             if(gender.equals("true")){
-                check = true;
+                gender = "nam";
                 break;
             }else if(gender.equals("false")){
-                check = false;
+                gender = "nữ";
                 break;
             } else System.err.println(error);
         }while(true);
-        return check;
+        return gender;
     }
 }

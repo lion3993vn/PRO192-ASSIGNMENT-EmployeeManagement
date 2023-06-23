@@ -15,7 +15,7 @@ public abstract class Employee {
     protected String gender;
     protected String birth;
     protected double basicSalary;
-    protected double rateSalary = 1;
+    protected double rateSalary;
     protected double salary;
     protected double seniority;
 
@@ -26,10 +26,12 @@ public abstract class Employee {
         this.birth = birth;
         this.basicSalary = basicSalary;
         this.seniority = seniority;
+        this.rateSalary = getRateSalary();
     }
 
     public double getRateSalary() {
-        int i;
+        int i = 0;
+        rateSalary = 1;
         if(seniority >= 5){
             i = (int)seniority / 5;
             rateSalary = rateSalary + i;

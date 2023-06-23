@@ -40,7 +40,7 @@ public class Administrator extends Employee{
     public void xuatThongTinNV() {
         DecimalFormat decimalFormat = new DecimalFormat("#,##0");
         System.out.println("Tên: " + name);
-        System.out.println("Mã số:" + id);
+        System.out.println("Mã số: " + id);
         System.out.println("Giới tính: " + gender);
         System.out.println("Ngày sinh: " + birth);
         System.out.println("Chức vụ: Nhân viên hành chính");

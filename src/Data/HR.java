@@ -7,6 +7,8 @@ package Data;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -44,10 +46,7 @@ public class HR {
                     }
                     break;
                 case 2:
-                    for (Employee x : ep) {
-                        System.out.println("========EMPLOYEE========");
-                        x.xuatThongTinNV();
-                    }
+
                     break;
                 case 3:
                     printEmployeeType();
@@ -64,11 +63,19 @@ public class HR {
                 case 7:
                     searchSelect();
                     choose3 = sc.nextByte();
-                    switch(choose3){
+                    switch (choose3) {
                         case 1:
+                            searchEpByName();
+                            break;
+                        case 2:
                             searchEpByID();
                             break;
+                        default:
+                            break;
                     }
+                case 8:
+                    sortEmployee();
+                    break;
             }
         } while (true);
     }
@@ -97,6 +104,7 @@ public class HR {
         System.out.println("=============");
         System.out.print("Lựa chọn của bạn: ");
     }
+
     public static void searchSelect() {
         System.out.println("=====SEARCH=====");
         System.out.println("1. Tìm kiếm bằng tên");
@@ -104,6 +112,7 @@ public class HR {
         System.out.println("=============");
         System.out.print("Lựa chọn của bạn: ");
     }
+
     public static void inputBussiness() {
         String name, ID, birth, gender;
         Scanner sc = new Scanner(System.in);
@@ -112,9 +121,11 @@ public class HR {
         do {
             System.out.print("ID (HRxxx): ");
             ID = sc.nextLine().toUpperCase();
-            if (Validation.isID(ID) && (searchID(ID) == null)){
+            if (Validation.isID(ID) && (searchID(ID) == null)) {
                 break;
-            } else System.err.println("ID đã bị trùng hoặc không đúng định dạng");
+            } else {
+                System.err.println("ID đã bị trùng hoặc không đúng định dạng");
+            }
         } while (true);
         gender = Validation.getGender("Giới tính (true: nam | false: nữ): ", "Vui lòng nhập true/false");
         birth = Validation.getBirthDate("Ngày sinh (dd/mm/yyyy): ", "Vui lòng nhập đúng định dạng");
@@ -132,8 +143,11 @@ public class HR {
         do {
             System.out.print("ID (HRxxx): ");
             ID = sc.nextLine().toUpperCase();
-            if (Validation.isID(ID) && (searchID(ID) == null)) break;
-            else System.err.println("ID đã bị trùng hoặc không đúng định dạng");
+            if (Validation.isID(ID) && (searchID(ID) == null)) {
+                break;
+            } else {
+                System.err.println("ID đã bị trùng hoặc không đúng định dạng");
+            }
         } while (true);
         gender = Validation.getGender("Giới tính (true: nam | false: nữ): ", "Vui lòng nhập true/false");
         birth = Validation.getBirthDate("Ngày sinh (dd/mm/yyyy): ", "Vui lòng nhập đúng định dạng");
@@ -141,6 +155,13 @@ public class HR {
         seniority = Validation.isNumber("Thâm niên: ", "Thâm niên phải là số và lớn hơn 0");
         allowance = Validation.isNumber("Phụ cấp: ", "Phụ cấp phải là số và lớn hơn 0");
         ep.add(new Administrator(allowance, name, ID, gender, birth, basicSalary, seniority));
+    }
+
+    public static void printEmployee() {
+        for (Employee x : ep) {
+            System.out.println("========EMPLOYEE========");
+            x.xuatThongTinNV();
+        }
     }
 
     public static void printEmployeeType() {
@@ -151,7 +172,9 @@ public class HR {
             type = sc.nextLine().toLowerCase();
             if (type.equals("business") || type.equals("administrator")) {
                 break;
-            } else System.err.println("Vui lòng nhập Business hoặc Administrator");
+            } else {
+                System.err.println("Vui lòng nhập Business hoặc Administrator");
+            }
         } while (true);
         for (Employee x : ep) {
             if (type.equals("business") && (x instanceof Business)) {
@@ -185,7 +208,7 @@ public class HR {
                 max = ep.get(i).getSalary();
             }
         }
-        System.out.println("Lương cao nhất công ty: " + max);
+        System.out.println("Lương cao nhất công ty: " + decimalFormat.format(max));
         System.out.println("Danh sách nhân viên có lương cao nhất: ");
         for (int i = 0; i < ep.size(); i++) {
             if (ep.get(i).getSalary() == max) {
@@ -194,6 +217,7 @@ public class HR {
             }
         }
     }
+
     public static void fiLowSalary() {
         double min = ep.get(0).getSalary();
         for (int i = 0; i < ep.size(); i++) {
@@ -201,7 +225,7 @@ public class HR {
                 min = ep.get(i).getSalary();
             }
         }
-        System.out.println("Lương thấp nhất công ty: " + min);
+        System.out.println("Lương thấp nhất công ty: " + decimalFormat.format(min));
         System.out.println("Danh sách nhân viên có lương thấp nhất: ");
         for (int i = 0; i < ep.size(); i++) {
             if (ep.get(i).getSalary() == min) {
@@ -210,24 +234,73 @@ public class HR {
             }
         }
     }
-    public static Employee searchID(String id){
+
+    public static Employee searchID(String id) {
         for (int i = 0; i < ep.size(); i++) {
-            if(ep.get(i).id.equals(id)){
+            if (ep.get(i).id.equalsIgnoreCase(id)) {
                 return ep.get(i);
             }
         }
         return null;
     }
-    public static void searchEpByID(){
+
+    public static void searchEpByID() {
         Scanner sc = new Scanner(System.in);
         System.out.print("Nhập id để tìm: ");
         String id = sc.nextLine();
-        if(searchID(id) == null){
+        if (searchID(id) == null) {
             System.err.println("Không có nhân viên nào với id " + id);
-        } else{
-            System.out.println("Đã tìm thấy nhân viên với id "+ id);
+        } else {
+            System.out.println("Đã tìm thấy nhân viên với id " + id);
             System.out.println("======INFO " + id + "======");
             searchID(id).xuatThongTinNV();
         }
+    }
+
+    public static void searchEpByName() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Nhập tên để tìm: ");
+        String name = sc.nextLine();
+        boolean found = false;
+        for (Employee x : ep) {
+            if (x.name.equalsIgnoreCase(name)) {
+                found = true;
+                System.out.println("======INFO " + name + "======");
+                x.xuatThongTinNV();
+            }
+        }
+        if (!found) {
+            System.err.println("Không tìm thấy người nào có tên " + name);
+        }
+    }
+
+    public static void sortEmployee() {
+        Collections.sort(ep, new Comparator<Employee>() {
+            @Override
+            public int compare(Employee o1, Employee o2) {
+                if (o1.name.equals(o2.name)) {
+                    return (int) (o2.getSalary() - o1.getSalary());
+                }
+                return o1.name.compareTo(o2.name);
+            }
+        });
+        System.out.println("Danh sách nhân viên sau khi sort");
+        printEmployee();
+    }
+
+    public static void removeEpByID() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Nhập id để xóa nhân viên: ");
+        String id = sc.nextLine();
+        boolean remove = false;
+        for (Employee x : ep) {
+            if (x.id.equalsIgnoreCase(id)) {
+                ep.remove(x);
+                System.out.println("Đã xóa nhân viên có ID " + id);
+                remove = true;
+                break;
+            }
+        }
+        if(!remove) System.err.println("Không có nhân viên nào có " + id + " để xóa");
     }
 }

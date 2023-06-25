@@ -55,7 +55,7 @@ public class Business extends Employee{
         System.out.println("Chức vụ: Nhân viên kinh doanh");
         System.out.println("Lương cơ bản: "+ decimalFormat.format(basicSalary));
         System.out.println("Lương: "+ decimalFormat.format(getSalary()));
-        System.out.println("Thâm niên: " + seniority);
+        System.out.println("Thâm niên: " + seniority + " năm");
         System.out.println("Doanh số: " + decimalFormat.format(getSales()));
         System.out.println("Hoa hồng: " + decimalFormat.format(getBonus()* getSales()));
     }

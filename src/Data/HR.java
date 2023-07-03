@@ -25,59 +25,132 @@ public class HR {
     }
 
     public static void main(String[] args) {
-        byte choose, choose2, choose3;
+        int choose, choose2, choose3;
+        String id;
         Scanner sc = new Scanner(System.in);
         do {
             menu();
-            choose = sc.nextByte();
+            choose = Validation.getChoose();
             switch (choose) {
                 case 1:
-                    nhapDS();
-                    choose2 = sc.nextByte();
-                    switch (choose2) {
-                        case 1:
-                            inputBussiness();
-                            break;
-                        case 2:
-                            inputAdministrator();
-                            break;
-                        default:
-                            break;
-                    }
+                    do {
+                        nhapDS();
+                        choose2 = Validation.getChoose();
+                        switch (choose2) {
+                            case 1:
+                                inputBussiness();
+                                break;
+                            case 2:
+                                inputAdministrator();
+                                break;
+                            default:
+                                break;
+                        }
+                    } while (choose2 < 2);
                     break;
                 case 2:
-
+                    if(ep.size() == 0){
+                        System.err.println("Danh sách nhân viên rỗng");
+                        break;
+                    }
+                    xuatToanBoDS();
                     break;
                 case 3:
-                    printEmployeeType();
+                    if(ep.size() == 0){
+                        System.err.println("Danh sách nhân viên rỗng");
+                        break;
+                    }
+                    String loaiNV;
+                    do {
+                        System.out.print("Vui lòng nhập loại (business | administrator): ");
+                        loaiNV = sc.nextLine().toLowerCase();
+                        if (loaiNV.equals("business") || loaiNV.equals("administrator")) {
+                            break;
+                        } else {
+                            System.err.println("Vui lòng nhập lại");
+                        }
+                    } while (true);
+                    xuatNVTheoLoai(loaiNV);
                     break;
                 case 4:
-                    calAvgSalary();
+                    if(ep.size() == 0){
+                        System.err.println("Danh sách nhân viên rỗng");
+                        break;
+                    }
+                    tinhLuongTB();
                     break;
                 case 5:
-                    fiMostSalary();
+                    if(ep.size() == 0){
+                        System.err.println("Danh sách nhân viên rỗng");
+                        break;
+                    }
+                    timLuongCaoNhat();
                     break;
                 case 6:
-                    fiLowSalary();
+                    if(ep.size() == 0){
+                        System.err.println("Danh sách nhân viên rỗng");
+                        break;
+                    }
+                    timLuongThapNhat();
                     break;
                 case 7:
-                    searchSelect();
-                    choose3 = sc.nextByte();
-                    switch (choose3) {
-                        case 1:
-                            searchEpByName();
-                            break;
-                        case 2:
-                            searchEpByID();
-                            break;
-                        default:
-                            break;
+                    if(ep.size() == 0){
+                        System.err.println("Danh sách nhân viên rỗng");
+                        break;
                     }
+                    do {
+                        searchSelect();
+                        choose3 = Validation.getChoose();
+                        switch (choose3) {
+                            case 1:
+                                searchEpByName();
+                                break;
+                            case 2:
+                                searchEpByID();
+                                break;
+                            default:
+                                break;
+                        }
+                    } while (choose3 < 3);
                 case 8:
-                    sortEmployee();
+                    sapXepNV();
+                    break;
+                case 9:
+                    if(ep.size() == 0){
+                        System.err.println("Danh sách nhân viên rỗng");
+                        break;
+                    }
+                    do {
+                        System.out.print("Nhập mã để xóa: ");
+                        id = sc.nextLine().toLowerCase();
+                        if (searchID(id) == null) {
+                            System.err.println("ID không đúng hoặc chưa có");
+                        } else {
+                            break;
+                        }
+                    } while (true);
+                    xoaNVTheoMa(id);
+                    break;
+                case 10:
+                    if(ep.size() == 0){
+                        System.err.println("Danh sách nhân viên rỗng");
+                        break;
+                    }
+                    do {
+                        System.out.print("Nhập mã để cập nhật: ");
+                        id = sc.nextLine().toUpperCase();
+                        if (searchID(id) == null) {
+                            System.err.println("ID không đúng hoặc chưa có");
+                        } else {
+                            break;
+                        }
+                    } while (true);
+                    capNhatNVTheoMa(id);
+                    break;
+                default:
                     break;
             }
-        } while (true);
+        } while (choose < 11);
     }
 
     public static void menu() {
@@ -92,15 +165,16 @@ public class HR {
         System.out.println("8. Sắp xếp nhân viên");
         System.out.println("9. Xóa nhân viên theo mã");
         System.out.println("10. Cập nhật nhân viên theo mã");
-        System.out.println("11. Exit chương trình");
+        System.out.println("11. Thoát chương trình");
         System.out.println("=============");
         System.out.print("Lựa chọn của bạn: ");
     }
 
     public static void nhapDS() {
-        System.out.println("=====ADD=====");
+        System.out.println("=====ADD/UPDATE=====");
         System.out.println("1. Nhân viên kinh doanh");
         System.out.println("2. Nhân viên hành chính");
+        System.out.println("3. Thoát chương trình");
         System.out.println("=============");
         System.out.print("Lựa chọn của bạn: ");
     }
@@ -109,6 +183,7 @@ public class HR {
         System.out.println("=====SEARCH=====");
         System.out.println("1. Tìm kiếm bằng tên");
         System.out.println("2. Tìm kiếm bằng id");
+        System.out.println("3. Thoát chương trình");
         System.out.println("=============");
         System.out.print("Lựa chọn của bạn: ");
     }
@@ -123,8 +198,10 @@ public class HR {
             ID = sc.nextLine().toUpperCase();
             if (Validation.isID(ID) && (searchID(ID) == null)) {
                 break;
+            } else if (!Validation.isID(ID)) {
+                System.err.println("ID không đúng định dạng");
             } else {
-                System.err.println("ID đã bị trùng hoặc không đúng định dạng");
+                System.err.println("ID đã bị trùng");
             }
         } while (true);
         gender = Validation.getGender("Giới tính (true: nam | false: nữ): ", "Vui lòng nhập true/false");
@@ -145,8 +222,10 @@ public class HR {
             ID = sc.nextLine().toUpperCase();
             if (Validation.isID(ID) && (searchID(ID) == null)) {
                 break;
+            } else if (!Validation.isID(ID)) {
+                System.err.println("ID không đúng định dạng");
             } else {
-                System.err.println("ID đã bị trùng hoặc không đúng định dạng");
+                System.err.println("ID đã bị trùng");
             }
         } while (true);
         gender = Validation.getGender("Giới tính (true: nam | false: nữ): ", "Vui lòng nhập true/false");
@@ -157,25 +236,22 @@ public class HR {
         ep.add(new Administrator(allowance, name, ID, gender, birth, basicSalary, seniority));
     }
 
-    public static void printEmployee() {
-        for (Employee x : ep) {
-            System.out.println("========EMPLOYEE========");
-            x.xuatThongTinNV();
+    public static void xuatToanBoDS() {
+        if (ep.isEmpty()) {
+            System.err.println("Không có nhân viên nào để hiển thị");
+        } else {
+            for (Employee x : ep) {
+                System.out.println("========EMPLOYEE========");
+                x.xuatThongTinNV();
+            }
         }
     }
 
-    public static void printEmployeeType() {
-        Scanner sc = new Scanner(System.in);
-        String type;
-        do {
-            System.out.print("Chọn loại nhân viên (Business | Administrator): ");
-            type = sc.nextLine().toLowerCase();
-            if (type.equals("business") || type.equals("administrator")) {
-                break;
-            } else {
-                System.err.println("Vui lòng nhập Business hoặc Administrator");
-            }
-        } while (true);
+    public static void xuatNVTheoLoai(String type) {
+        if (ep.size() == 0) {
+            System.out.println("Không có nhân viên nào để hiển thị");
+            return;
+        }
         for (Employee x : ep) {
             if (type.equals("business") && (x instanceof Business)) {
                 System.out.println("======BUSINESS======");
@@ -187,7 +263,7 @@ public class HR {
         }
     }
 
-    public static void calAvgSalary() {
+    public static void tinhLuongTB() {
         double sum = 0;
         if (ep.size() == 0) {
             System.err.println("Không có nhân viên nào để tính lương");
@@ -201,44 +277,44 @@ public class HR {
         }
     }
 
-    public static void fiMostSalary() {
+    public static void timLuongCaoNhat() {
         double max = ep.get(0).getSalary();
-        for (int i = 0; i < ep.size(); i++) {
-            if (ep.get(i).getSalary() > max) {
-                max = ep.get(i).getSalary();
+        for (Employee x : ep) {
+            if (x.getSalary() > max) {
+                max = x.getSalary();
             }
         }
         System.out.println("Lương cao nhất công ty: " + decimalFormat.format(max));
         System.out.println("Danh sách nhân viên có lương cao nhất: ");
-        for (int i = 0; i < ep.size(); i++) {
-            if (ep.get(i).getSalary() == max) {
+        for (Employee x : ep) {
+            if (x.getSalary() == max) {
                 System.out.println("======MOST SALARY======");
-                ep.get(i).xuatThongTinNV();
+                x.xuatThongTinNV();
             }
         }
     }
 
-    public static void fiLowSalary() {
+    public static void timLuongThapNhat() {
         double min = ep.get(0).getSalary();
-        for (int i = 0; i < ep.size(); i++) {
-            if (ep.get(i).getSalary() < min) {
-                min = ep.get(i).getSalary();
+        for (Employee x : ep) {
+            if (x.getSalary() < min) {
+                min = x.getSalary();
             }
         }
         System.out.println("Lương thấp nhất công ty: " + decimalFormat.format(min));
         System.out.println("Danh sách nhân viên có lương thấp nhất: ");
-        for (int i = 0; i < ep.size(); i++) {
-            if (ep.get(i).getSalary() == min) {
+        for (Employee x : ep) {
+            if (x.getSalary() == min) {
                 System.out.println("======LOWEST SALARY======");
-                ep.get(i).xuatThongTinNV();
+                x.xuatThongTinNV();
             }
         }
     }
 
     public static Employee searchID(String id) {
-        for (int i = 0; i < ep.size(); i++) {
-            if (ep.get(i).id.equalsIgnoreCase(id)) {
-                return ep.get(i);
+        for (Employee x : ep) {
+            if (x.id.equalsIgnoreCase(id)) {
+                return x;
             }
         }
         return null;
@@ -274,7 +350,7 @@ public class HR {
         }
     }
 
-    public static void sortEmployee() {
+    public static void sapXepNV() {
         Collections.sort(ep, new Comparator<Employee>() {
             @Override
             public int compare(Employee o1, Employee o2) {
@@ -284,14 +360,11 @@ public class HR {
                 return o1.name.compareTo(o2.name);
             }
         });
-        System.out.println("Danh sách nhân viên sau khi sort");
-        printEmployee();
+        System.out.println("Danh sách nhân viên sau khi sắp xếp");
+        xuatToanBoDS();
     }
 
-    public static void removeEpByID() {
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Nhập id để xóa nhân viên: ");
-        String id = sc.nextLine();
+    public static void xoaNVTheoMa(String id) {
         boolean remove = false;
         for (Employee x : ep) {
             if (x.id.equalsIgnoreCase(id)) {
@@ -301,6 +374,42 @@ public class HR {
                 break;
             }
         }
-        if(!remove) System.err.println("Không có nhân viên nào có " + id + " để xóa");
+        if (!remove) {
+            System.err.println("Không có nhân viên nào có id " + id + " để xóa");
+        }
+    }
+
+    public static void capNhatNVTheoMa(String id) {
+        Scanner sc = new Scanner(System.in);
+        String name, birth, gender;
+        double basicSalary, seniority, allowance, sales;
+        byte choose;
+        if (searchID(id) == null) {
+            System.err.println("ID không đúng hoặc không có");
+            return;
+        }
+        for (int i = 0; i < ep.size(); i++) {
+            if (ep.get(i).id.equals(id)) {
+                nhapDS();
+                choose = sc.nextByte();
+                name = Validation.getNoneBlankString("Tên: ", "Lỗi tên");
+                gender = Validation.getGender("Giới tính (true: nam | false: nữ): ", "Vui lòng nhập true/false");
+                birth = Validation.getBirthDate("Ngày sinh (dd/mm/yyyy): ", "Vui lòng nhập đúng định dạng");
+                basicSalary = Validation.isNumber("Lương cơ bản: ", "Lương phải là số và lớn hơn 0");
+                seniority = Validation.isNumber("Thâm niên: ", "Thâm niên phải là số và lớn hơn 0");
+                switch (choose) {
+                    case 1:
+                        sales = Validation.isNumber("Doanh số: ", "Doanh số phải là số và lớn hơn 0");
+                        ep.set(i, new Business(sales, name, id, gender, birth, basicSalary, seniority));
+                        break;
+                    case 2:
+                        allowance = Validation.isNumber("Phụ cấp: ", "Phụ cấp phải là số và lớn hơn 0");
+                        ep.set(i, new Administrator(allowance, name, id, gender, birth, basicSalary, seniority));
+                        break;
+                }
+                break;
+            }
+        }
+        System.out.println("Thông tin đã được cập nhật");
     }
 }

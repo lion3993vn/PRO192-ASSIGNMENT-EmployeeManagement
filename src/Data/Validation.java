@@ -52,9 +52,8 @@ public class Validation {
             //System.out.println("Output:" + df.format(input));
             return true;
         } catch (Exception e) {
-
+            return false;
         }
-        return false;
     }
 
     public static String getBirthDate(String input, String error) {

@@ -46,17 +46,20 @@ public class HR {
                             default:
                                 break;
                         }
-                    } while (choose2 < 2);
+                    } while (choose2 < 3);
                     break;
                 case 2:
-                    if(ep.size() == 0){
+                    if (ep.size() == 0) {
                         System.err.println("Danh sách nhân viên rỗng");
                         break;
                     }
                     xuatToanBoDS();
+                    System.out.println(" ");
+                    System.out.print("Nhấn phím Enter để tiếp tục ");
+                    sc.nextLine();
                     break;
                 case 3:
-                    if(ep.size() == 0){
+                    if (ep.size() == 0) {
                         System.err.println("Danh sách nhân viên rỗng");
                         break;
                     }
@@ -71,30 +74,42 @@ public class HR {
                         }
                     } while (true);
                     xuatNVTheoLoai(loaiNV);
+                    System.out.println(" ");
+                    System.out.print("Nhấn phím Enter để tiếp tục ");
+                    sc.nextLine();
                     break;
                 case 4:
-                    if(ep.size() == 0){
+                    if (ep.size() == 0) {
                         System.err.println("Danh sách nhân viên rỗng");
                         break;
                     }
                     tinhLuongTB();
+                    System.out.println(" ");
+                    System.out.print("Nhấn phím Enter để tiếp tục ");
+                    sc.nextLine();
                     break;
                 case 5:
-                    if(ep.size() == 0){
+                    if (ep.size() == 0) {
                         System.err.println("Danh sách nhân viên rỗng");
                         break;
                     }
                     timLuongCaoNhat();
+                    System.out.println(" ");
+                    System.out.print("Nhấn phím Enter để tiếp tục ");
+                    sc.nextLine();
                     break;
                 case 6:
-                    if(ep.size() == 0){
+                    if (ep.size() == 0) {
                         System.err.println("Danh sách nhân viên rỗng");
                         break;
                     }
                     timLuongThapNhat();
+                    System.out.println(" ");
+                    System.out.print("Nhấn phím Enter để tiếp tục ");
+                    sc.nextLine();
                     break;
                 case 7:
-                    if(ep.size() == 0){
+                    if (ep.size() == 0) {
                         System.err.println("Danh sách nhân viên rỗng");
                         break;
                     }
@@ -112,11 +127,15 @@ public class HR {
                                 break;
                         }
                     } while (choose3 < 3);
+                    break;
                 case 8:
                     sapXepNV();
+                    System.out.println(" ");
+                    System.out.print("Nhấn phím Enter để tiếp tục ");
+                    sc.nextLine();
                     break;
                 case 9:
-                    if(ep.size() == 0){
+                    if (ep.size() == 0) {
                         System.err.println("Danh sách nhân viên rỗng");
                         break;
                     }
@@ -130,9 +149,12 @@ public class HR {
                         }
                     } while (true);
                     xoaNVTheoMa(id);
+                    System.out.println(" ");
+                    System.out.print("Nhấn phím Enter để tiếp tục ");
+                    sc.nextLine();
                     break;
                 case 10:
-                    if(ep.size() == 0){
+                    if (ep.size() == 0) {
                         System.err.println("Danh sách nhân viên rỗng");
                         break;
                     }
@@ -145,7 +167,11 @@ public class HR {
                             break;
                         }
                     } while (true);
+                    System.out.println("Đã tìm thấy nhân viên có id " + id.toUpperCase());
                     capNhatNVTheoMa(id);
+                    System.out.println(" ");
+                    System.out.print("Nhấn phím Enter để tiếp tục ");
+                    sc.nextLine();
                     break;
                 default:
                     break;
@@ -327,9 +353,12 @@ public class HR {
         if (searchID(id) == null) {
             System.err.println("Không có nhân viên nào với id " + id);
         } else {
-            System.out.println("Đã tìm thấy nhân viên với id " + id);
+            System.out.println("Đã tìm thấy nhân viên với id " + id.toUpperCase());
             System.out.println("======INFO " + id + "======");
             searchID(id).xuatThongTinNV();
+            System.out.println(" ");
+            System.out.print("Nhấn phím Enter để tiếp tục ");
+            sc.nextLine();
         }
     }
 
@@ -338,9 +367,14 @@ public class HR {
         System.out.print("Nhập tên để tìm: ");
         String name = sc.nextLine();
         boolean found = false;
+        boolean check = false;
         for (Employee x : ep) {
             if (x.name.equalsIgnoreCase(name)) {
                 found = true;
+                if(!check){
+                    System.out.println("Đã tìm thấy nhân viên với tên " + name);
+                    check = true;
+                }
                 System.out.println("======INFO " + name + "======");
                 x.xuatThongTinNV();
             }
@@ -348,6 +382,9 @@ public class HR {
         if (!found) {
             System.err.println("Không tìm thấy người nào có tên " + name);
         }
+        System.out.println(" ");
+        System.out.print("Nhấn phím Enter để tiếp tục ");
+        sc.nextLine();
     }
 
     public static void sapXepNV() {
@@ -384,10 +421,6 @@ public class HR {
         String name, birth, gender;
         double basicSalary, seniority, allowance, sales;
         byte choose;
-        if (searchID(id) == null) {
-            System.err.println("ID không đúng hoặc không có");
-            return;
-        }
         for (int i = 0; i < ep.size(); i++) {
             if (ep.get(i).id.equals(id)) {
                 nhapDS();
